@@ -17,6 +17,7 @@ export default function Weather() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   const handleFetchWeather = async () => {
     if (!city.trim()) {
@@ -40,6 +41,17 @@ export default function Weather() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const addToFavorites = () => {
+    if (weather && !favorites.includes(weather.name)) {
+      setFavorites((prev) => [...prev, weather.name]);
+    }
+  };
+
+  const handleFavoriteClick = (favorite: string) => {
+    setCity(favorite);
+    handleFetchWeather();
   };
 
   const getBackgroundClass = () => {
@@ -77,6 +89,14 @@ export default function Weather() {
         >
           {loading ? "Fetching..." : "Get Weather"}
         </button>
+        {weather && (
+          <button
+            onClick={addToFavorites}
+            className="mt-2 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 w-full transition"
+          >
+            Add to Favorites
+          </button>
+        )}
         {error && <p className="text-red-500 mt-4">{error}</p>}
         {weather && (
           <div className="mt-6 text-black text-center">
@@ -109,6 +129,22 @@ export default function Weather() {
                   onClick={() => setCity(item)}
                 >
                   {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {favorites.length > 0 && (
+          <div className="mt-6">
+            <h3 className="text-lg font-bold mb-2 text-gray-700">Favorites</h3>
+            <ul className="list-disc list-inside text-black">
+              {favorites.map((fav, index) => (
+                <li
+                  key={index}
+                  className="cursor-pointer hover:underline text-green-600"
+                  onClick={() => handleFavoriteClick(fav)}
+                >
+                  {fav}
                 </li>
               ))}
             </ul>
