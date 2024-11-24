@@ -29,7 +29,6 @@ export default function Weather() {
       setError("");
       const data = await fetchWeather(city);
 
-      // Update weather and history
       setWeather(data);
       setHistory((prev) => {
         const newHistory = [city, ...prev.filter((c) => c.toLowerCase() !== city.toLowerCase())];
@@ -59,7 +58,7 @@ export default function Weather() {
   return (
     <div className={`${getBackgroundClass()} min-h-screen flex items-center justify-center px-4`}>
       <div className="bg-white p-6 rounded shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-4 text-center">Weather App</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Weather App</h2>
         <div className="mb-4">
           <input
             type="text"
@@ -71,12 +70,12 @@ export default function Weather() {
         </div>
         <button
           onClick={handleFetchWeather}
-          className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full ${
+          className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full transition ${
             loading ? "opacity-50" : ""
           }`}
           disabled={loading}
         >
-          {loading ? "Loading..." : "Get Weather"}
+          {loading ? "Fetching..." : "Get Weather"}
         </button>
         {error && <p className="text-red-500 mt-4">{error}</p>}
         {weather && (
@@ -101,10 +100,14 @@ export default function Weather() {
         )}
         {history.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-lg font-bold mb-2">Search History</h3>
+            <h3 className="text-lg font-bold mb-2 text-gray-700">Search History</h3>
             <ul className="list-disc list-inside text-black">
               {history.map((item, index) => (
-                <li key={index} className="cursor-pointer hover:underline" onClick={() => setCity(item)}>
+                <li
+                  key={index}
+                  className="cursor-pointer hover:underline text-blue-600"
+                  onClick={() => setCity(item)}
+                >
                   {item}
                 </li>
               ))}
