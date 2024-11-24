@@ -3,23 +3,31 @@
 import { useState } from "react";
 import { fetchWeather } from "../utils/weather";
 
+interface WeatherData {
+  name: string;
+  sys: { country: string };
+  main: { temp: number; humidity: number };
+  weather: { description: string }[];
+  wind: { speed: number };
+}
+
 export default function Weather() {
   const [city, setCity] = useState("");
-  const [weather, setWeather] = useState<any>(null);
+  const [weather, setWeather] = useState<WeatherData | null>(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
 
   const handleFetchWeather = async () => {
     try {
-      setLoading(true); 
-      setError(""); 
+      setLoading(true); // Start loading
+      setError(""); // Reset errors
       const data = await fetchWeather(city);
       setWeather(data);
-    } catch (err) {
+    } catch {
       setError("City not found or API error.");
       setWeather(null);
     } finally {
-      setLoading(false); 
+      setLoading(false); // Stop loading
     }
   };
 
@@ -37,8 +45,10 @@ export default function Weather() {
       </div>
       <button
         onClick={handleFetchWeather}
-        className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${loading ? "opacity-50" : ""}`}
-        disabled={loading} 
+        className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${
+          loading ? "opacity-50" : ""
+        }`}
+        disabled={loading}
       >
         {loading ? "Loading..." : "Get Weather"}
       </button>
